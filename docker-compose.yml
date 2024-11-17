@@ -1,0 +1,48 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    networks:
+      - metabase_network
+    ports:
+      - "27017:27017"  
+    volumes:
+      - mongo_data:/data/db 
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    networks:
+      - metabase_network
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+
+  data_ingest:
+    build:
+      context: ./data_ingest 
+    container_name: data_ingest
+    networks:
+      - metabase_network
+    volumes:
+      - ./data_ingest/yt_utils.py:/yt_utils.py
+      - ./data_ingest/db_utils.py:/db_utils.py
+      - ./data_ingest/main.py:/main.py
+    environment:
+      YOUTUBE_DATA_API_KEY: ${YOUTUBE_DATA_API_KEY}
+      MONGO_URI: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
+    depends_on:
+      - mongodb
+
+networks:
+  metabase_network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
