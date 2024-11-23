@@ -54,7 +54,7 @@ def get_channel_details(youtube, channel_ids) -> dict:
 
     return channel_response
 
-def get_channel_ids(video_response) -> dict:
+def get_channel_ids(video_response) -> list:
     channel_ids = set()
 
     if "items" in video_response:
@@ -65,3 +65,8 @@ def get_channel_ids(video_response) -> dict:
 
     # Convert set to list before returning
     return list(channel_ids)
+
+def get_video_categories(youtube) -> dict:
+    categories_response = youtube.videoCategories().list(part="snippet",regionCode='US').execute()
+    
+    return categories_response

@@ -15,7 +15,11 @@ if __name__ == "__main__":
     channel_details = yt_utils.get_channel_details(youtube, channel_ids)
     print(f'channel details: \n {channel_details} \n')
 
+    category_details = yt_utils.get_video_categories(youtube)
+    print(f'categories: \n {category_details} \n')
+
     # Insert data using the context manager
     with db_utils.mongodb_connection() as db:
         db_utils.insert_data(db, 'videos', video_details, 'video_name')
         db_utils.insert_data(db, 'channels', channel_details, 'channel_name')
+        db_utils.insert_categories(db, 'categories', category_details)

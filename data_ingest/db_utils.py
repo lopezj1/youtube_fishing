@@ -31,4 +31,9 @@ def insert_data(db, collection_name, data, group_field):
         else:
             print(f"Skipped group '{group_name}' because it doesn't contain a list of items.")
 
-    return "All items inserted."
+def insert_categories(db, collection_name, data):
+    collection = db[collection_name]
+
+    document =  [{'id': item['id'], 'title': item['snippet']['title']} for item in data['items']]
+    result = collection.insert_many(document)
+    print("Inserted document for categories")
