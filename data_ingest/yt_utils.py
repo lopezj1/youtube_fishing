@@ -1,9 +1,4 @@
-import isodate
 from googleapiclient.discovery import build
-
-def convert_duration_to_minutes(duration) -> float:
-    parsed_duration = isodate.parse_duration(duration)
-    return round(parsed_duration.total_seconds() / 60, 2)
 
 def initialize_youtube(api_key):
     '''Initialize the YouTube API client'''

@@ -1,3 +1,2 @@
 google_api_python_client==2.153.0
-isodate==0.7.2
 pymongo==4.10.1
