@@ -2,7 +2,7 @@ import os
 import yt_utils
 import db_utils
 
-QUERY = "nj striped bass surf fishing"
+QUERY = "NJ Striped Bass Surf Fishing"
 if __name__ == "__main__":
     api_key = os.environ['YOUTUBE_DATA_API_KEY']
     youtube = yt_utils.initialize_youtube(api_key)

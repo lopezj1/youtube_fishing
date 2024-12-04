@@ -4,30 +4,18 @@ def initialize_youtube(api_key):
     '''Initialize the YouTube API client'''
     return build('youtube', 'v3', developerKey=api_key)
 
-def search_videos(youtube, query, max_results=50, max_pages=1) -> list:
-    '''Search for videos based on a keyword'''
-    video_ids = []
-    next_page_token = None
-    page_count = 0
+def search_videos(youtube, query, max_results=50, order='viewCount') -> list:
+    '''Search for videos based on a keyword and order by view count high to low'''
+    search_response = youtube.search().list(
+        q=query,
+        type="video",
+        part="id,snippet",
+        maxResults=max_results,
+        order=order
+    ).execute()
 
-    while page_count < max_pages:
-        search_response = youtube.search().list(
-            q=query,
-            type="video",
-            part="id,snippet",
-            maxResults=max_results,
-            pageToken=next_page_token
-        ).execute()
-
-        # Extract video IDs from the current page and add to the list
-        video_ids.extend([item['id']['videoId'] for item in search_response['items']])
-
-        # Check for the next page token and increment the page counter
-        next_page_token = search_response.get('nextPageToken')
-        if not next_page_token:  # Break if there is no next page
-            break
-        
-        page_count += 1
+    # Extract video IDs from the response
+    video_ids = [item['id']['videoId'] for item in search_response['items']]
 
     return video_ids
 
